@@ -95,7 +95,7 @@ public class Randyland {
             } while (name == null);
         }
         /** Pass a marking period. Each player should take a turn. IDK what else is supposed to happen. */
-        private void passPhase() {
+        private void passPhase(Scanner input) {
             for (Player player : players) {
                 if (gameOver) {
                     return;
@@ -106,7 +106,7 @@ public class Randyland {
                     System.out.println("    " + "Hello " + player.name + ", welcome to Tech, a school with truly outstanding administration");
                     System.out.println("You begin your first marking period placed in a class.");
                     System.out.println("The class was randomly selected when the administrators decided ");
-                    System.out.println("To drunkenly throw darts at a computer screen. Because of this, " );
+                    System.out.println("to drunkenly throw darts at a computer screen. Because of this, " );
                     System.out.println("you ended up placed in a class roughly " + (start - 1) + " levels above " );
                     System.out.println("where you should start. You will now advance to that square. ");
                     advance(player, start, true);
@@ -271,7 +271,7 @@ public class Randyland {
         System.out.print("\n All characters have been added. ");
         System.out.println("Now beginning turns.");
         do {
-            board.passPhase();
+            board.passPhase(input);
             board.displayGameState();
         } while(!board.gameOver);
         input.close();
