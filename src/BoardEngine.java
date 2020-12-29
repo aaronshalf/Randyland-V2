@@ -10,7 +10,7 @@ public class BoardEngine {
     private static final String BACKGROUND;
     /** Tracks the players and their locations. */
     private HashMap<String, Integer> players;
-    private static final Square[] SQUARESET;
+    public static final Square[] SQUARESET;
     static {
         SQUARESET = new Square[NUMSQUARES];
         Color squareColor = Color.RED;
