@@ -4,15 +4,22 @@ import java.awt.*;
 import java.nio.file.Paths;
 import java.util.*;
 
+import static java.lang.Character.isDigit;
+
 public class BoardEngine {
     public static final int SCALE = 16;
     public static final int HEIGHT = 60;
     public static final int WIDTH = 100;
     public static final int NUMSQUARES = 24;
     private static final String BACKGROUND;
+    private static final String HEADROYCE;
+    private static final String TECH;
+    private static final String OHIGH;
+    private static final String ODOWD;
     public static final Square[] SQUARESET;
     /** Tracks the players and their locations. */
     private ArrayList<Player> players;
+    private HashMap<Integer, String> schools;
     private boolean gameOver;
 
     static {
@@ -28,6 +35,10 @@ public class BoardEngine {
             }
         }
         BACKGROUND = Paths.get("randyland_background.PNG").toString();
+        HEADROYCE = Paths.get("headroyce.png").toString();
+        TECH = Paths.get("tech.png").toString();
+        OHIGH = Paths.get("ohigh.jpg").toString();
+        ODOWD = Paths.get("odowd.jpg").toString();
     }
     /** Instantiate a boardEngine. */
     public BoardEngine() {
@@ -38,6 +49,11 @@ public class BoardEngine {
         StdDraw.setYscale(0, HEIGHT);
         Font font = new Font("Monaco", Font.BOLD, SCALE - 2);
         StdDraw.setFont(font);
+        schools = new HashMap<>();
+        schools.put(1, HEADROYCE);
+        schools.put(2, TECH);
+        schools.put(3, OHIGH);
+        schools.put(4, ODOWD);
     }
     /** Start tracking players with unique String names. */
     public void addPlayer(Player player) {
@@ -82,14 +98,28 @@ public class BoardEngine {
 
     }
     public void charSelect(Player player) {
+        StdDraw.clear(Color.BLACK);
+        StdDraw.text(WIDTH / 2, HEIGHT / 2, "Select your avatar.");
+        StdDraw.show();
         while (true) {
             if (StdDraw.hasNextKeyTyped()) {
                 char c = StdDraw.nextKeyTyped();
-                switch (c) {
-                    case (1):
+                //System.out.print(schools.keySet());
+                //System.out.print(schools.values());
+                System.out.print(c + " ");
+                System.out.println(schools.get((int) c));
+                if (isDigit(c) && schools.containsKey((int) c)) {
+                    player.setImage(schools.get((int) c));
+                    System.out.print("success");
+                    break;
+                } else {
+                    StdDraw.setPenColor(Color.RED);
+                    StdDraw.text(WIDTH / 2, 20, "Must be proper selection.");
+                    StdDraw.show();
                 }
             }
         }
+        return;
     }
     public void initialize() {
         boolean complete = false;

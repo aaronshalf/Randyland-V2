@@ -54,4 +54,7 @@ public class Player {
     public void changeLocation(int off) {
         this.location += off;
     }
+    public void setImage(String filepath) {
+        this.image = filepath;
+    }
 }
