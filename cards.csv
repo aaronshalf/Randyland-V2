@@ -1,0 +1,14 @@
+g,"Mr. D offers you some questionable life advice. Take it or leave it?",-1,2
+g,"Mr. Li invites you to play board games. Learn strategies or troll?",0,2
+g,"Mr Sutton talks to you about his family. Listen or zone out?",-3,-1
+g,"You got to Ms Joe to ask about an assignment. Chat with her or get advice?",-1,3
+g,"You participate in a hackathon. Make a dumb meta joke or code something useful?",-4,4
+g,"You have a study session with friends. Make dumb videos or actually study?",-2,2
+r,"It's time for Sutton's transcendentalism essay. No one is safe.",8,true,2
+r,"AP exams are coming up and you enrolled in 4. That was a mistake.",8,true,3
+r,"There's a career fair in the gym. If you don't socialize you'll be bored out of your mind.",5,false,1
+r,"Some friends from middle school are visiting. Who wouldn't want to hang out with them.",6,false,0
+r,"The school administration got drunk and burned your transcript. Convince them you're smart.",7,false,1
+r,"The school administration stole your belongings in the hope that you don't graduate. Hope you studied.",6,true,3
+r,"The school administration won't accept your past credits due to transfer errors. You'll need to take more classes.",6,true,0
+r,"The school administration messed up their scheduling and delayed the SAT. Study more!",5,true,2

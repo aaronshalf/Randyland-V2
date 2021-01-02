@@ -16,7 +16,23 @@ public class Square {
     public void draw() {
         StdDraw.setPenColor(backgroundColor);
         StdDraw.filledCircle(position.getX(), position.getY(), 2);
+        int x = -1;
+        int y = 1;
+        for (Player player: players) {
+            StdDraw.picture(position.getX() + x * 2, position.getY() + y * 2, player.getImage());
+            x = x * -1;
+            y = x * y;
+        }
     }
+    /** Returns a card corresponding to the proper square.
+     * Might also apply some biases depending on the grade.
+    public Card drawCard() {
+        if (backgroundColor.equals(Color.RED)) {
+            return CardSet.drawRedCard(0);
+        } else {
+            return CardSet.drawGreenCard();
+        }
+    } */
     public Position getPosition() {
         return position;
     }
