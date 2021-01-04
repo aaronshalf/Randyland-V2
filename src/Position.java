@@ -9,7 +9,7 @@ public class Position {
     }
 
     /** Creates a position from a reference position. */
-    public Position(Position ref, int offX, int offY) {
+    public Position(Position ref, double offX, double offY) {
         this.x = ref.getX() + offX;
         this.y = ref.getY() + offY;
     }

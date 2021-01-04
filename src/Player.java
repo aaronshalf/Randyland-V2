@@ -143,7 +143,6 @@ public class Player {
         while (true) {
             if (bot) {
                 c = (char) (BoardEngine.RANDOM.nextInt(2) + 49);
-                System.out.println(c);
             }
             if (StdDraw.hasNextKeyTyped() || bot) {
                 if (!bot) {
