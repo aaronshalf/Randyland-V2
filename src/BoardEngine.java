@@ -11,6 +11,8 @@ public class BoardEngine {
     public static final int HEIGHT = 60;
     public static final int WIDTH = 100;
     public static final int NUMSQUARES = 24;
+    private static final int TICK = 10;
+
     private static final String BACKGROUND;
     private static final String HEADROYCE;
     private static final String TECH;
@@ -46,11 +48,11 @@ public class BoardEngine {
                 squareColor = Color.RED;
             }
         }
-        BACKGROUND = Paths.get("randyland_background.png").toString();
-        HEADROYCE = Paths.get("headroyce.png").toString();
-        TECH = Paths.get("tech.png").toString();
-        OHIGH = Paths.get("ohigh.png").toString();
-        ODOWD = Paths.get("odowd.png").toString();
+        BACKGROUND = Paths.get("schools", "randyland_background.png").toString();
+        HEADROYCE = Paths.get("schools", "headroyce.png").toString();
+        TECH = Paths.get("schools", "tech.png").toString();
+        OHIGH = Paths.get("schools", "ohigh.png").toString();
+        ODOWD = Paths.get("schools", "odowd.png").toString();
     }
     /** Instantiate a boardEngine. */
     public BoardEngine() {
@@ -74,15 +76,16 @@ public class BoardEngine {
         players.add(player);
         SQUARESET[0].getPlayers().add(player);
     }
-    /** Render the current board state. */
-    public void showBoard() {
+    /** Render the current board state.
+     * @param time*/
+    public void showBoard(int time) {
         StdDraw.clear(Color.BLACK);
         StdDraw.picture(WIDTH * .5, HEIGHT * .5, BACKGROUND);
         for (Square square : SQUARESET) {
             square.draw();
         }
         StdDraw.show();
-        StdDraw.pause(2000); //TODO: could change this to a keypress.
+        StdDraw.pause(time); //TODO: could change this to a keypress.
     }
     /** Displays information about the state of the game. */
     public void displayHud() {
@@ -167,22 +170,27 @@ public class BoardEngine {
         }
         return;
     }
-    /** Begin the player creation, then transition to game phase. */
+    /** Begin the player creation, then transition to game phase.
+     * Currently limited to 4 players. */
     public void initialize() {
         while (true) {
             StdDraw.clear(Color.BLACK);
             enterName();
+            if (players.size() == 4) {
+                break;
+            }
             displayText("Add another player? (y/n)");
             while (!StdDraw.hasNextKeyTyped()) {
                 continue;
             }
-            if (!(StdDraw.nextKeyTyped() == 'y')) {
+            if (!(Character.toLowerCase(StdDraw.nextKeyTyped()) == 'y')) {
                 break;
             }
         }
-        showBoard();
+        showBoard(2000);
         turnLoop();
     }
+    /** The screen that displays the winner of the game then exits. May display other info. */
     public void endScreen(Player player) {
         StdDraw.clear(Color.BLACK);
         //StdDraw.setPenColor(Color.BLUE);
@@ -193,7 +201,7 @@ public class BoardEngine {
         //StdDraw.setFont(DEFAULTFONT);
         //StdDraw.text(WIDTH * .5, .4 * HEIGHT, "you may exit the game now.");
         popText("(you may exit the game now.)", WIDTH * .5, .4 * HEIGHT,  Color.WHITE, DEFAULTFONT);
-        StdDraw.pause(10000);
+        solicitKey(' ', true);
         System.exit(0);
     }
     /** Goes through each turn until the game ends. */
@@ -210,11 +218,11 @@ public class BoardEngine {
                 }
                 int move = (player.flipCoin() ? 1:0) + 1;
                 movePlayer(player, move);
-                showBoard();
+                showBoard(2000);
                 int penalty = player.drawCard();
                 if (penalty != 0) {
                     movePlayer(player, penalty);
-                    showBoard();
+                    showBoard(2000);
                 }
                 int result = player.tick();
                 if (result != 0) {
@@ -222,7 +230,8 @@ public class BoardEngine {
                     StdDraw.pause(1500);
                     movePlayer(player, result);
                     player.changeMeter(1);
-                    showBoard();
+                    showBoard(2000);
+                    //TODO: Maybe change this to semester?
                 }
             }
             markingPeriod += 1;
@@ -236,7 +245,6 @@ public class BoardEngine {
             }
         }
         endScreen(winner);
-        //leaderboard here?
     }
     /** Move a player a specified distance forward. */
     public void movePlayer(Player player, int distance) {
@@ -244,16 +252,36 @@ public class BoardEngine {
             gameOver = true;
             winner = player;
             endScreen(player);
-            return;
         } else if (player.getLocation() + distance <= 0) {
             displayText("You seem to be struggling. Mr. Li puts in a good word for you. Move forward 3 squares.");
             movePlayer(player, 3);
             return;
         }
-        SQUARESET[player.getLocation()].getPlayers().remove(player);
-        SQUARESET[player.getLocation() + distance].getPlayers().add(player);
+        Square curr = SQUARESET[player.getLocation()];
+        Square target = SQUARESET[player.getLocation() + distance];
+        curr.getPlayers().remove(player);
+        moveAnimation(player, curr.getPosition(), target.getPosition());
+        target.getPlayers().add(player);
         player.changeLocation(distance);
     }
+    public void moveAnimation(Player player, Position current, Position target) {
+        int numTicks = 1000 / TICK;
+        double offX = (target.getX() - current.getX()) / numTicks;
+        double offY = (target.getY() -current.getY()) / numTicks;
+        for (int i = 0; i < 1000; i += TICK) {
+            current = new Position(current, offX, offY);
+            StdDraw.clear();
+            StdDraw.picture(WIDTH * .5, HEIGHT * .5, BACKGROUND);
+            for (Square square : SQUARESET) {
+                square.draw();
+            }
+            StdDraw.picture(current.getX(), current.getY(), player.getImage());
+            //System.out.print("should display");
+            StdDraw.show();
+            StdDraw.pause(TICK);
+        }
+    }
+
     /** Display a message in the middle of the screen. */
     public static void displayText(String text) {
         StdDraw.clear(Color.BLACK);
